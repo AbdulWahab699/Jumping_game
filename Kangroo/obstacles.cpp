@@ -7,7 +7,7 @@ void obstacles::intitialize()
 
 void obstacles::load()
 {
-	if (Texture.loadFromFile("Pillars 1.png")) {
+	if (Texture.loadFromFile("obstacles-1/boxAlt.png")) {
 		std::cout << "Obstacle is loaded!" << std::endl;
 	}
 	else {
@@ -15,8 +15,8 @@ void obstacles::load()
 	}
 	Texture.setSmooth(true);
 	Sprite.setTexture(Texture);
-	Sprite.setPosition(300.f, 300.f);
-	Sprite.setScale(1.f,1.f);
+	Sprite.setPosition(300.f, 350.f);
+	Sprite.setScale(0.7f,0.7f);
 }
 void obstacles::update()
 {
