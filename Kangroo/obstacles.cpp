@@ -1,29 +1,39 @@
 #include "obstacles.h"
 #include <iostream>
-void obstacles::intitialize()
+
+
+    
+
+void obstacles::initialize(const std::string& filepath, sf::Vector2f position, float scale)
 {
-	
+    speed = 150.f;
+    if (Texture.loadFromFile(filepath)) {
+        std::cout << "loaded " << filepath << std::endl;
+    }
+    else {
+        std::cout << "Failed to load " << filepath << std::endl;
+    }
+
+    Texture.setSmooth(true);
+    Sprite.setTexture(Texture);
+    Sprite.setPosition(position);
+    Sprite.setScale(scale, scale);
 }
 
 void obstacles::load()
 {
-	if (Texture.loadFromFile("obstacles-1/boxAlt.png")) {
-		std::cout << "Obstacle is loaded!" << std::endl;
-	}
-	else {
-		std::cout << "Obstacle failed to load!" << std::endl;
-	}
-	Texture.setSmooth(true);
-	Sprite.setTexture(Texture);
-	Sprite.setPosition(300.f, 350.f);
-	Sprite.setScale(0.7f,0.7f);
+
 }
-void obstacles::update()
+
+void obstacles::update(float deltaTime)
 {
-
-
+    Sprite.move(-speed * deltaTime, 0.f);
+    if (Sprite.getPosition().x + Sprite.getGlobalBounds().width < 0) {
+        Sprite.setPosition(800.f, 350.f);
+    }
 }
+
 void obstacles::Draw(sf::RenderWindow& window)
 {
-	window.draw(Sprite);
+    window.draw(Sprite);
 }
