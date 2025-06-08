@@ -6,7 +6,7 @@ void score::initialize() {
     scoreAdd = 0.555;
     scoreClock.restart();
 
-    if (!font.loadFromFile("font-maker.ttf")) {
+    if (!font.loadFromFile("pixel.ttf")) {
         std::cout << " Failed to load font.ttf" << std::endl;
     }
 }

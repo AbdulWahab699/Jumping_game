@@ -7,9 +7,12 @@
 #include <memory>
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 480), "Kangaroo Game");
+    sf::RenderWindow window(sf::VideoMode(800, 480), "Not decided yet Game");
     window.setFramerateLimit(60);
     sf::Clock deltaClock;
+
+    //sound
+
 
     //score system
     score gameScore;
@@ -77,6 +80,8 @@ int main() {
 
         // Jump
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !isJumping) {
+            character.jumpSound.play();
+            
             velocityY = jumpForce;
             isJumping = true;
         }

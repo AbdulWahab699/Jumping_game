@@ -1,5 +1,6 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 class animation {
 private:
@@ -13,7 +14,8 @@ private:
 
 public:
     sf::Sprite Sprite;
-
+    sf::SoundBuffer jumpBuffer;
+    sf::Sound jumpSound;
     void initialize();
     void update();
     void jumpUpdate();

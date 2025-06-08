@@ -9,6 +9,10 @@ void animation::initialize() {
     else {
         std::cout << "Character Loaded!" << std::endl;
     }
+    if (!jumpBuffer.loadFromFile("jump-main.wav")) {
+        std::cerr << "Failed load jump.wav" << std::endl;
+    }
+    jumpSound.setBuffer(jumpBuffer);
     Texture.setSmooth(true);
     Sprite.setTexture(Texture);
     Sprite.setPosition(50.f, 300.f);
