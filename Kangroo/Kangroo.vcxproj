@@ -134,10 +134,12 @@
     <ClCompile Include="animation.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="obstacles.cpp" />
+    <ClCompile Include="score.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation.h" />
     <ClInclude Include="obstacles.h" />
+    <ClInclude Include="score.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

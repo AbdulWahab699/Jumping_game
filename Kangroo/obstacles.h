@@ -1,16 +1,17 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <memory>
 
 class obstacles {
 public:
-    void initialize(const std::string& texturePath, sf::Vector2f position, float scale = 0.5f);                      // Initialize variables
-    void load();                            // Load texture and setup sprite
-    void update(float deltaTime);           // Update obstacle position using delta time
-    void Draw(sf::RenderWindow& window);    // Draw sprite on the screen
+    void initialize(std::shared_ptr<sf::Texture> texture, sf::Vector2f position, float scale = 0.5f);
+    void update(float deltaTime);
+    void Draw(sf::RenderWindow& window);
+    sf::FloatRect getBounds() const;
+
 
 private:
-    sf::Texture Texture;                   
-    sf::Sprite Sprite;                     
-    float speed;  
-    
+    std::shared_ptr<sf::Texture> Texture;
+    sf::Sprite Sprite;
+    float speed;
 };

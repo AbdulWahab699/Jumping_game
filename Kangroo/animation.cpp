@@ -11,7 +11,7 @@ void animation::initialize() {
     }
     Texture.setSmooth(true);
     Sprite.setTexture(Texture);
-    Sprite.setPosition(30.f, 300.f);
+    Sprite.setPosition(50.f, 300.f);
 
     // Initialize animation timing
     switchTime = 0.15f;
@@ -29,7 +29,7 @@ void animation::update() {
             currentFrame = 0;
         }
 
-        Sprite.setTextureRect(sf::IntRect(85 * currentFrame, 0, 85, 150));
+        Sprite.setTextureRect(sf::IntRect(85 * currentFrame, 0, 85, 100));
         clockAnimation.restart();
     }
 }
@@ -42,7 +42,7 @@ void animation::jumpUpdate()
             currentFrame = 0;
         }
 
-        Sprite.setTextureRect(sf::IntRect(85 * currentFrame, 150, 85, 150));
+        Sprite.setTextureRect(sf::IntRect(85 * currentFrame, 150, 85, 120));
         clockAnimation.restart();
     }
 }
