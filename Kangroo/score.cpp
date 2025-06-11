@@ -14,14 +14,6 @@ void score::initialize() {
     load();
 }
 
-void score::save()
-{
-    std::ofstream output("highscore.txt");
-    if (output.is_open()) {
-        output << highScore;
-        output.close();
-    }
-}
 
 void score::load() {
     std::ifstream input("highscore.txt");
@@ -34,6 +26,15 @@ void score::load() {
     }
 }
 
+void score::save()
+{
+    std::ofstream output("highscore.txt");
+    if (output.is_open()) {
+        output << highScore;
+        std::cout << "New High Score is Saved" << std:: endl;
+        output.close();
+    }
+}
 void score::update() {
     if (scoreClock.getElapsedTime().asMilliseconds() >= 250) {
         score += scoreAdd;
