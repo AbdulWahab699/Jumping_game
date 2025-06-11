@@ -12,6 +12,7 @@ void animation::initialize() {
     if (!jumpBuffer.loadFromFile("jump-main.wav")) {
         std::cerr << "Failed load jump.wav" << std::endl;
     }
+    
     jumpSound.setBuffer(jumpBuffer);
     Texture.setSmooth(true);
     Sprite.setTexture(Texture);
@@ -50,6 +51,7 @@ void animation::jumpUpdate()
         clockAnimation.restart();
     }
 }
+
 
 void animation::Draw(sf::RenderWindow& window) {
     window.draw(Sprite);

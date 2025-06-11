@@ -132,12 +132,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="animation.cpp" />
+    <ClCompile Include="backgound.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="obstacles.cpp" />
     <ClCompile Include="score.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation.h" />
+    <ClInclude Include="backgound.h" />
     <ClInclude Include="obstacles.h" />
     <ClInclude Include="score.h" />
   </ItemGroup>

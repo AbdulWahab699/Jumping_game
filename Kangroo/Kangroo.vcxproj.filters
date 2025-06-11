@@ -27,6 +27,9 @@
     <ClCompile Include="score.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="backgound.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="animation.h">
@@ -36,6 +39,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="score.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="backgound.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -3,6 +3,7 @@
 #include "obstacles.h"
 #include "animation.h"
 #include "score.h"
+#include "backgound.h"
 #include <vector>
 #include <memory>
 
@@ -11,7 +12,7 @@ int main() {
     window.setFramerateLimit(60);
     sf::Clock deltaClock;
 
-    //sound
+    
 
 
     //score system
@@ -22,12 +23,12 @@ int main() {
     sf::Clock collisionEffectClock;
     float collisionEffectDuration = 0.2f;
 
-    // Background
-    sf::Texture backgroundTexture;
-    if (!backgroundTexture.loadFromFile("obstacles-1/background.png"))
-        std::cout << "Background Failed to Load!" << std::endl;
-    sf::Sprite backgroundSprite(backgroundTexture);
 
+    
+    // Background
+    backgound background;
+    background.initialize();
+    
     // Pathway
     sf::Texture pathTexture;
     if (!pathTexture.loadFromFile("obstacles-1/pathway.png"))
@@ -52,7 +53,7 @@ int main() {
         auto tex = std::make_shared<sf::Texture>();
         if (tex->loadFromFile(path))
             std::cout << "Loaded: " << path << std::endl;
-        else
+        else 
             std::cout << "Failed to load: " << path << std::endl;
         tex->setSmooth(true);
         textures.push_back(tex);
@@ -65,7 +66,7 @@ int main() {
 
     // Physics
     float gravity = 981.f;
-    float jumpForce = -570.f;
+    float jumpForce = -620.f;
     bool isJumping = false;
     float velocityY = 0.f;
     float groundY = 300.f;
@@ -106,7 +107,7 @@ int main() {
         // Spawn obstacle
         if (spawnClock.getElapsedTime().asSeconds() > spawnDelay) {
             obstacles ob;
-            ob.initialize(textures[currentObstacleIndex], sf::Vector2f(800.f, 370.f)); // align with kangaroo
+            ob.initialize(textures[currentObstacleIndex], sf::Vector2f(800.f, 370.f));
             activeObstacles.push_back(ob);
             currentObstacleIndex = (currentObstacleIndex + 1) % textures.size();
             spawnClock.restart();
@@ -122,6 +123,7 @@ int main() {
                         std::cout << "Collision Detected!" << std::endl;
                         showCollisionEffect = true;
                         collisionEffectClock.restart();
+                        window.close();
                     }
                 
             }
@@ -130,10 +132,11 @@ int main() {
         //Score System
     
         gameScore.update();
+        background.update();
 
         // Draw
         window.clear(sf::Color::White);
-        window.draw(backgroundSprite);
+        background.Draw(window);
         window.draw(pathSprite);
         character.Draw(window);
         gameScore.Draw(window);
@@ -153,7 +156,7 @@ int main() {
             window.draw(obstacleBox);
         }
 
-        // Debug: character hitbox (red)
+        // character collision box (red)
         sf::FloatRect charBounds = character.Sprite.getGlobalBounds();
         sf::RectangleShape charBox;
         charBox.setSize({ charBounds.width, charBounds.height });
