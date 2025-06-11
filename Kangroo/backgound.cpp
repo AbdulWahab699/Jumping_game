@@ -2,7 +2,7 @@
 #include <iostream>
 
 void backgound::initialize() {
-    switchTime = 10.f;
+    switchTime = 5.f;
     currentFrame = 0;
     totalFrames = 3;
     if (!Texture.loadFromFile("obstacles-1/backgroundmix.png")) {

@@ -8,7 +8,7 @@
 #include <memory>
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode(800, 480), "Not decided yet Game");
+    sf::RenderWindow window(sf::VideoMode(800, 480), "DASH TILL' YOU CRASH");
     window.setFramerateLimit(60);
     sf::Clock deltaClock;
 
@@ -121,6 +121,7 @@ int main() {
             if (character.Sprite.getGlobalBounds().intersects(ob.getBounds())) {
                     if (!showCollisionEffect) {
                         std::cout << "Collision Detected!" << std::endl;
+                        gameScore.save();
                         showCollisionEffect = true;
                         collisionEffectClock.restart();
                         window.close();
