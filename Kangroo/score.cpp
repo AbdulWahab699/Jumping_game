@@ -8,7 +8,7 @@ void score::initialize() {
     highScore = 0;
     scoreClock.restart();
 
-    if (!font.loadFromFile("pixel.ttf")) {
+    if (!font.loadFromFile("Tourney-Medium.ttf")) {
         std::cout << " Failed to load font.ttf" << std::endl;
     }
     load();
@@ -47,7 +47,7 @@ void score::Draw(sf::RenderWindow& window) {
     sf::Text text;
     text.setFont(font);
     text.setString("Score: " + std::to_string((float)score));
-    text.setCharacterSize(24);
+    text.setCharacterSize(26);
     text.setFillColor(sf::Color::Black);
     text.setPosition(10.f, 10.f);
     window.draw(text);

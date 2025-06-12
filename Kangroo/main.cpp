@@ -3,6 +3,7 @@
 #include "obstacles.h"
 #include "animation.h"
 #include "score.h"
+#include "pathway.h"
 #include "backgound.h"
 #include <vector>
 #include <memory>
@@ -12,35 +13,27 @@ int main() {
     window.setFramerateLimit(60);
     sf::Clock deltaClock;
 
-    
+    int gameState = 0;  // 0 = Start, 1 = Playing, 2 = Game Over
+
+    // Interface Textures
+    sf::Texture gameStartTexture, gameOverTexture;
+    sf::Sprite gameStartSprite, gameOverSprite;
+
+    if (gameStartTexture.loadFromFile("obstacles-1/Front-intreface.png"))
+        gameStartSprite.setTexture(gameStartTexture);
+    if (gameOverTexture.loadFromFile("obstacles-1/Tryagain-interface.png"))
+        gameOverSprite.setTexture(gameOverTexture);
 
 
-    //score system
+    // Game elements
+    pathway pathway;
     score gameScore;
-    gameScore.initialize();
-    // Collision detection
-    bool showCollisionEffect = false;
-    sf::Clock collisionEffectClock;
-    float collisionEffectDuration = 0.2f;
-
-
-    
-    // Background
     backgound background;
-    background.initialize();
-    
-    // Pathway
-    sf::Texture pathTexture;
-    if (!pathTexture.loadFromFile("obstacles-1/pathway.png"))
-        std::cout << "Pathway Failed to Load!" << std::endl;
-    sf::Sprite pathSprite(pathTexture);
-    pathSprite.setPosition(0.f, 400.f);
-
-    // Character
     animation character;
-    character.initialize();
 
-    // Load obstacle textures
+    
+
+    std::vector<std::shared_ptr<sf::Texture>> textures;
     std::vector<std::string> filepaths = {
         "obstacles-1/grass.png", "obstacles-1/boxAlt.png", "obstacles-1/boxCoin.png",
         "obstacles-1/boxExplosive.png", "obstacles-1/fence.png", "obstacles-1/dirt.png",
@@ -48,15 +41,12 @@ int main() {
         "obstacles-1/lock_Green.png"
     };
 
-    std::vector<std::shared_ptr<sf::Texture>> textures;
     for (const auto& path : filepaths) {
         auto tex = std::make_shared<sf::Texture>();
-        if (tex->loadFromFile(path))
-            std::cout << "Loaded: " << path << std::endl;
-        else 
-            std::cout << "Failed to load: " << path << std::endl;
-        tex->setSmooth(true);
-        textures.push_back(tex);
+        if (tex->loadFromFile(path)) {
+            tex->setSmooth(true);
+            textures.push_back(tex);
+        }
     }
 
     std::vector<obstacles> activeObstacles;
@@ -71,23 +61,59 @@ int main() {
     float velocityY = 0.f;
     float groundY = 300.f;
 
+    // Reset everything
+    auto resetGame = [&]() {
+        activeObstacles.clear();
+        gameScore.initialize();
+        background.initialize();
+        pathway.initialize();
+        character.initialize();
+        character.Sprite.setPosition(100.f, groundY);
+        velocityY = 0.f;
+        isJumping = false;
+        spawnClock.restart();
+        };
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
-        };
+
+            if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space) {
+                if (gameState == 0 || gameState == 2) {
+                    resetGame();
+                    gameState = 1;
+                }
+            }
+        }
+
         float deltaTime = deltaClock.restart().asSeconds();
 
-        // Jump
+        if (gameState == 0) {
+            // Start screen
+            window.clear();
+            window.draw(gameStartSprite);
+            window.display();
+            continue;
+        }
+
+        if (gameState == 2) {
+            // Game over screen
+            window.clear();
+            window.draw(gameOverSprite);
+            window.display();
+            continue;
+        }
+
+        // === Playing State ===
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !isJumping) {
             character.jumpSound.play();
-            
             velocityY = jumpForce;
             isJumping = true;
         }
 
-        // Apply gravity
+        // Gravity & movement
         velocityY += gravity * deltaTime;
         character.Sprite.move(0.f, velocityY * deltaTime);
 
@@ -98,13 +124,13 @@ int main() {
             isJumping = false;
         }
 
-        // Animation
+        // Update animations
         if (isJumping)
             character.jumpUpdate();
         else
             character.update();
 
-        // Spawn obstacle
+        // Spawn obstacles
         if (spawnClock.getElapsedTime().asSeconds() > spawnDelay) {
             obstacles ob;
             ob.initialize(textures[currentObstacleIndex], sf::Vector2f(800.f, 370.f));
@@ -113,63 +139,29 @@ int main() {
             spawnClock.restart();
         }
 
-
-        // Update and check collisions
+        // Update obstacles & check collision
         for (auto& ob : activeObstacles) {
             ob.update(deltaTime);
-
             if (character.Sprite.getGlobalBounds().intersects(ob.getBounds())) {
-                    if (!showCollisionEffect) {
-                        std::cout << "Collision Detected!" << std::endl;
-                        gameScore.save();
-                        showCollisionEffect = true;
-                        collisionEffectClock.restart();
-                        window.close();
-                    }
-                
+                gameScore.save();  // Save high score
+                gameState = 2;     // Game Over
             }
         }
 
-        //Score System
-    
-        gameScore.update();
+        pathway.update();
         background.update();
+        gameScore.update();
 
-        // Draw
+        // === DRAW ===
         window.clear(sf::Color::White);
         background.Draw(window);
-        window.draw(pathSprite);
+        /*window.draw(pathSprite);*/
+        pathway.Draw(window);
         character.Draw(window);
         gameScore.Draw(window);
 
-        // Draw obstacles
-        for (auto& ob : activeObstacles) {
+        for (auto& ob : activeObstacles)
             ob.Draw(window);
-
-            // Debug: obstacle hitbox (blue)
-            sf::RectangleShape obstacleBox;
-            sf::FloatRect obBounds = ob.getBounds();
-            obstacleBox.setSize({ obBounds.width, obBounds.height });
-            obstacleBox.setPosition(obBounds.left, obBounds.top);
-            obstacleBox.setFillColor(sf::Color::Transparent);
-            obstacleBox.setOutlineColor(sf::Color::Transparent);
-            obstacleBox.setOutlineThickness(1.f);
-            window.draw(obstacleBox);
-        }
-
-        // character collision box (red)
-        sf::FloatRect charBounds = character.Sprite.getGlobalBounds();
-        sf::RectangleShape charBox;
-        charBox.setSize({ charBounds.width, charBounds.height });
-        charBox.setPosition(charBounds.left, charBounds.top);
-        charBox.setFillColor(sf::Color::Transparent);
-        charBox.setOutlineColor(sf::Color::Transparent);
-        charBox.setOutlineThickness(1.f);
-        window.draw(charBox);
-        if (showCollisionEffect && collisionEffectClock.getElapsedTime().asSeconds() < collisionEffectDuration) {
-            window.clear(sf::Color(255, 0, 0, 150)); // Red flash
-        }
-        
 
         window.display();
     }
