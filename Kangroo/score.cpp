@@ -26,22 +26,30 @@ void score::load() {
     }
 }
 
-void score::save()
-{
+void score::save() {
     std::ofstream output("highscore.txt");
     if (output.is_open()) {
         output << highScore;
-        std::cout << "New High Score is Saved" << std:: endl;
+        std::cout << "New High Score is Saved" << std::endl;
         output.close();
     }
 }
+
 void score::update() {
     if (scoreClock.getElapsedTime().asMilliseconds() >= 250) {
         score += scoreAdd;
         std::cout << "Score: " << score << std::endl;
+
+        // Check if current score beats high score
+        if (score > highScore) {
+            highScore = score;
+            save();
+        }
+
         scoreClock.restart();
     }
 }
+
 
 void score::Draw(sf::RenderWindow& window) {
     sf::Text text;

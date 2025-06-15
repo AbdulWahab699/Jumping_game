@@ -8,6 +8,9 @@ public:
 	float score;
 	float scoreAdd;
 	float highScore;
+	float getScore() const { return score; }
+	float getHighScore() const { return highScore; }
+	void setHighScore(float hs) { highScore = hs; }
 	void initialize();
 	void save();
 	void load();
